@@ -9,5 +9,6 @@ This repository stores reusable personal AI agents and skills.
 - Keep project-specific paths, credentials, and machine-local configuration out of reusable definitions.
 - Preserve existing user instructions when adding installation support; never silently overwrite destination files.
 - Update the relevant README when changing usage or layout.
+- When adapting external agents or skills, follow `SOURCES.md` for attribution and preserve applicable license and copyright notices.
 - Validate changed scripts and examples with checks appropriate to the change.
 - Do not add frameworks, dependencies, or automation until a concrete use requires them.

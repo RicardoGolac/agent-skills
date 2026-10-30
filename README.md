@@ -8,6 +8,7 @@ A personal library of reusable AI agent definitions, skills, and project templat
 personal-skills/
 ├── README.md
 ├── AGENTS.md
+├── SOURCES.md    # Inspiration and attribution for adapted work
 ├── agents/       # Reusable agent definitions
 ├── skills/       # One directory per skill
 ├── templates/    # Starter instructions for consuming repositories
@@ -29,6 +30,10 @@ personal-skills/
 For now, copy selected definitions into the locations expected by your AI tool. Review and adapt them to the consuming project. Tool-specific paths and formats will be documented as support is added.
 
 `scripts/install.sh` is a placeholder. It does not install or link anything yet. Once target tools are chosen, it can support linking selected definitions without overwriting existing project instructions.
+
+## Inspiration and sources
+
+This library draws inspiration from other agent and skill repositories. See [Sources and inspiration](SOURCES.md) for the reference list and how to document skills or agents copied and personalized here.
 
 ## Next steps
 
