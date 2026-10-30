@@ -1,0 +1,25 @@
+# OS and editor files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+# Secrets and machine-local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.local
+
+# Temporary files and generated caches
+tmp/
+.cache/
+*.log
+__pycache__/
+*.py[cod]
+.venv/
+node_modules/
