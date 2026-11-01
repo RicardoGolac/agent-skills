@@ -9,6 +9,9 @@ personal-skills/
 ├── README.md
 ├── AGENTS.md
 ├── SOURCES.md    # Inspiration and attribution for adapted work
+├── .github/
+│   ├── instructions/ # Repository instruction files
+│   └── skills/       # Skills packaged with GitHub instructions
 ├── agents/       # Reusable agent definitions
 ├── skills/       # One directory per skill
 ├── templates/    # Starter instructions for consuming repositories
@@ -20,7 +23,7 @@ personal-skills/
 
 - Use lowercase, hyphenated names for agents and skills.
 - Store agent definitions in `agents/<agent-name>.md`.
-- Store each skill in `skills/<skill-name>/SKILL.md`.
+- Store each skill in `skills/<skill-name>/SKILL.md` or `.github/skills/<skill-name>/SKILL.md`, following its package layout. Keep one canonical definition per skill.
 - Add `scripts/`, `references/`, and `assets/` within a skill only when needed.
 - Keep reusable instructions here and project-specific context in the consuming repository.
 - Never commit credentials, private keys, or local environment settings.
@@ -30,6 +33,8 @@ personal-skills/
 For now, copy selected definitions into the locations expected by your AI tool. Review and adapt them to the consuming project. Tool-specific paths and formats will be documented as support is added.
 
 `scripts/install.sh` is a placeholder. It does not install or link anything yet. Once target tools are chosen, it can support linking selected definitions without overwriting existing project instructions.
+
+See [Memory Bank](.github/skills/memory-bank/README.md) for the available memory-bank skill, its templates, design intent, and feature retention policy.
 
 ## Inspiration and sources
 

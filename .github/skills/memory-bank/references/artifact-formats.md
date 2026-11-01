@@ -1,6 +1,6 @@
 # Document structure
 
-Create this bank at the target repository root:
+Resolve the target root using [workspace banks](workspace-banks.md), then create this bank there:
 
 ```text
 .memory-bank/
@@ -17,7 +17,15 @@ Create this bank at the target repository root:
         └── AGENTS.md
 ```
 
-Create individual feature folders only when there is a feature to track. If Git needs to retain an initially empty `features/`, use `.gitkeep` and remove it when the first feature is added. Read `feature-lifecycle.md` for feature metadata, additional artifacts, and retention configuration.
+Create individual feature folders only when there is a feature to track. If Git needs to retain an initially empty `features/`, use `.gitkeep` and remove it when the first feature is added. See the feature artifact format below and [feature retention](feature-retention.md) for policy and cleanup rules.
+
+The root structure is closed: do not add root files or directories beyond those listed without an explicit schema extension request. Preserve and report existing extras; do not delete them merely to conform. Additional feature-specific Markdown and agent files belong within the relevant feature folder.
+
+## Templates
+
+Initialize missing core artifacts from the same-named files in [assets/templates](../assets/templates/). Fill instructional comments and `{{...}}` tokens with evidence from the target repository, remove the comments, and mark unknowns explicitly. Do not overwrite existing documents with templates.
+
+The template directory's `feature/` is a source template only: instantiate its `feature.md` and `AGENTS.md` inside `features/<feature-slug>/` when tracking actual feature work. Do not copy a directory literally named `feature/` into the bank root. The `retention.json` template is valid as-is and retains everything by default.
 
 ## app-description.md
 
@@ -42,7 +50,7 @@ This is the navigation entry point for agents looking for a file or folder.
 Include:
 
 - **Snapshot and coverage:** inspected revision, verification date, dirty state, scope, and excluded generated/vendor/cache paths.
-- **Topology:** an annotated directory tree for first-party areas and a table of path, responsibility, and key entry points. Cover every first-party top-level area; expand significant modules and use linked per-directory maps if a single file becomes unwieldy.
+- **Topology:** an annotated directory tree for first-party areas and a table of path, responsibility, and key entry points. Cover every first-party top-level area; expand significant modules and organize large maps into linked sections within this file.
 - **Relationships:** dependency direction and runtime/data flow among components, grounded in imports, wiring, routes, or configuration. Label uncertain edges.
 - **Task-to-path index:** where to change concrete capabilities, add routes, modify data models, configure builds, and find tests, using the repository's actual concepts.
 - **Cross-cutting locations:** tests, configuration, migrations, scripts, shared types, documentation, and agent instructions where present.
@@ -90,3 +98,30 @@ For requirements, identify source and status (implemented, partial, planned, or 
 ## Updating an existing bank
 
 Preserve meaningful sections beyond this schema. Consolidate duplicate content with links, retain valid historical records, and correct stale statements. Populate missing sections from evidence rather than filling them with generic project advice. Never label an entire bank current after verifying only a feature-sized subset.
+
+## Feature artifacts
+
+Use `.memory-bank/features/<feature-slug>/` for a substantive feature, branch, or PR. Reuse an existing record for the same work across branch renames or PR creation; do not create duplicates for every invocation. Use a filesystem-safe lowercase hyphenated slug, not a raw branch name containing slashes. Resolve collisions with a ticket or PR identifier.
+
+Create `feature.md` with YAML frontmatter:
+
+```yaml
+---
+name: account-export
+status: active
+created: 2026-11-01
+last_activity: 2026-11-01
+closed: null
+retain: false
+branches: []
+pull_requests: []
+---
+```
+
+Dates use ISO `YYYY-MM-DD` in the user's timezone. Allowed statuses: `active`, `paused`, `completed`, `abandoned`. `closed` is required for completed or abandoned features. Only change `last_activity` for substantive feature work, changed scope, decisions, or outcomes; a bank scan, formatting edit, or cleanup preview is not activity.
+
+The body records purpose, scope, expected behavior/acceptance criteria, affected paths, decisions, progress, verification, and remaining work. Distinguish planned work from implemented behavior. Add `plan.md`, `notes.md`, or other Markdown artifacts only when they add useful detail.
+
+Create a feature-local `AGENTS.md` containing feature-specific context, constraints, relevant paths, and validation expectations. It governs only its directory under normal agent-file scoping. Link it from `feature.md` and tell the working agent to read it explicitly for code work elsewhere; do not claim it automatically governs the feature's source files. Add other agent definitions only when the feature needs them.
+
+Keep branch and PR links when known. Do not infer completion just because a branch is missing or a PR was merged; verify outstanding scope and record the outcome. On reopening, set `status: active`, clear `closed`, and update `last_activity` for the resumed work.

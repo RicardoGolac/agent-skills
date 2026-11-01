@@ -1,6 +1,6 @@
 # Skills
 
-Store each reusable skill in its own directory:
+Store each reusable skill in its own directory under `skills/` or `.github/skills/`, following its package layout:
 
 ```text
 <skill-name>/
@@ -16,4 +16,4 @@ Store each reusable skill in its own directory:
 
 | Skill | Purpose |
 | --- | --- |
-| [memory-bank](memory-bank/SKILL.md) | Create and maintain a root `.memory-bank/` with current codebase navigation, architecture, requirements, conventions, changes, and feature records with configurable retention. |
+| [memory-bank](../.github/skills/memory-bank/README.md) | Create and maintain a root `.memory-bank/` with current codebase navigation, architecture, requirements, conventions, changes, and feature records with configurable retention. Canonical package: `.github/skills/memory-bank/`. |

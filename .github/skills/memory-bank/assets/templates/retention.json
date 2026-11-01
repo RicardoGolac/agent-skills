@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "retention_days": "all",
+  "cleanup_on_update": false,
+  "exceptions": []
+}

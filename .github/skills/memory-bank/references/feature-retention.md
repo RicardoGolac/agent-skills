@@ -1,31 +1,6 @@
-# Feature lifecycle and retention
+# Feature retention
 
-## Feature folders
-
-Use `.memory-bank/features/<feature-slug>/` for a substantive feature, branch, or PR. Reuse an existing record for the same work across branch renames or PR creation; do not create duplicates for every invocation. Use a filesystem-safe lowercase hyphenated slug, not a raw branch name containing slashes. Resolve collisions with a ticket or PR identifier.
-
-Create `feature.md` with YAML frontmatter:
-
-```yaml
----
-name: account-export
-status: active
-created: 2026-11-01
-last_activity: 2026-11-01
-closed: null
-retain: false
-branches: []
-pull_requests: []
----
-```
-
-Dates use ISO `YYYY-MM-DD` in the user's timezone. Allowed statuses: `active`, `paused`, `completed`, `abandoned`. `closed` is required for completed or abandoned features. Only change `last_activity` for substantive feature work, changed scope, decisions, or outcomes; a bank scan, formatting edit, or cleanup preview is not activity.
-
-The body records purpose, scope, expected behavior/acceptance criteria, affected paths, decisions, progress, verification, and remaining work. Distinguish planned work from implemented behavior. Add `plan.md`, `notes.md`, or other Markdown artifacts only when they add useful detail.
-
-Create a feature-local `AGENTS.md` containing feature-specific context, constraints, relevant paths, and validation expectations. It governs only its directory under normal agent-file scoping. Link it from `feature.md` and tell the working agent to read it explicitly for code work elsewhere; do not claim it automatically governs the feature's source files. Add other agent definitions only when the feature needs them.
-
-Keep branch and PR links when known. Do not infer completion just because a branch is missing or a PR was merged; verify outstanding scope and record the outcome. On reopening, set `status: active`, clear `closed`, and update `last_activity` for the resumed work.
+Read [artifact formats](artifact-formats.md#feature-artifacts) for feature metadata and lifecycle states.
 
 ## Retention configuration
 
