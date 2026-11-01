@@ -1,0 +1,4 @@
+interface:
+  display_name: "Memory Bank"
+  short_description: "Maintain codebase maps, context, and feature memory"
+  default_prompt: "Use $memory-bank to create or refresh this repository's .memory-bank from the current codebase."
