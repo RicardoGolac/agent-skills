@@ -1,0 +1,4 @@
+interface:
+  display_name: "Grammer Gremlin"
+  short_description: "Pedantic file-by-file code hygiene and warning review"
+  default_prompt: "Use $grammer-gremlin to review this file for syntax errors, warnings, and local code smells."

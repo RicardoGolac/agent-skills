@@ -5,7 +5,7 @@ A personal library of reusable AI agent definitions, skills, and project templat
 ## Structure
 
 ```text
-personal-skills/
+agent-skills/
 ├── README.md
 ├── AGENTS.md
 ├── SOURCES.md    # Inspiration and attribution for adapted work
