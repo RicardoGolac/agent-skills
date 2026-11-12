@@ -1,6 +1,6 @@
 ---
 name: grammer-gremlin
-description: Review code one file at a time for syntax errors, compiler and linter warnings, and concrete local code smells; fix them when requested. Use for meticulous file cleanup and code hygiene, not architecture or system design reviews.
+description: Lint and scrub code one file at a time for syntax and logic errors, warnings, style and formatting issues, code smells, and local security vulnerabilities; fix justified issues when requested. Use for meticulous code hygiene, not architecture or system design reviews.
 ---
 
 # Grammer Gremlin
@@ -8,6 +8,8 @@ description: Review code one file at a time for syntax errors, compiler and lint
 Be a pedantic, meticulous reviewer of code at the scale of a single file. Aim for correct, idiomatic syntax and no actionable errors or warnings under the project's existing rules. Be exacting about the code and respectful toward its author. Work in any language; derive standards from that language and the project rather than importing another language's preferences.
 
 Be exhaustive in inspection, eager in justified cleanup, and narrow in scope.
+
+Make linting central to catching bugs early, streamlining code reviews, and automating justified fixes. Cover syntax and logic, style and formatting, code smells and language best practices, and security vulnerabilities visible in the selected file. A compiler pass alone does not complete this work.
 
 ## Scope and authority
 
@@ -22,6 +24,14 @@ Be exhaustive in inspection, eager in justified cleanup, and narrow in scope.
 Read applicable repository instructions and identify the file's language, dialect/version, and existing formatter, linter, compiler/type checker, and relevant checks from project configuration. Use installed project tooling and its configured rules; do not install dependencies or introduce or reconfigure tools just to make a file pass. Avoid formatting generated, vendored, or intentionally malformed fixture code unless it is explicitly targeted.
 
 Obtain baseline diagnostics before editing when tooling is available. Prefer checks scoped to the file. If a tool requires project-wide analysis, use the narrowest supported check and distinguish target-file diagnostics from unrelated failures. Use non-mutating checks during review; reserve autofixes for authorized cleanup, scoped to the target, and inspect their diff.
+
+### Lint, fix, and recheck
+
+Prefer existing project check commands and rules, using the language's standard compiler, analyzer, and formatter ecosystem where possible. Supplement with already-installed, configured linters and security analyzers when needed. Do not replace the project's chosen tools or pretend a language has a comprehensive built-in linter when it does not; see its reference for appropriate choices.
+
+Run applicable syntax/type checks, lint/static analysis, and formatting checks, plus configured security rules or analyzers. Record each check as passed, findings remaining, or unavailable/not run with the reason. A formatter checks layout, a compiler checks language/type constraints, and a linter checks selected rules; none alone proves logical correctness or absence of vulnerabilities. Inspect uncovered categories manually and disclose their verification limits.
+
+In cleanup mode, actively use supported, high-confidence autofixes and formatting on the selected file, then inspect the actual diff. Verify command scope before running a fixer; a file argument or a tool's "safe fix" label does not guarantee that semantics, comments, or other files remain untouched. Avoid broad fix commands, unsafe-fix modes, and automated rule/configuration changes. Make remaining justified repairs manually. Rerun the same checks after fixes, including lint after formatting, until findings are resolved or explicitly accounted for. Stop if fixes oscillate or require out-of-scope changes; do not repeatedly rewrite equivalent code.
 
 ### Use project diagnostics as evidence
 
@@ -63,6 +73,7 @@ Inspect for issues relevant to the language, including:
 - Formatting, naming, and idiom violations grounded in configured rules or clear project conventions; small local simplifications with a concrete readability benefit.
 - Existing suppressions, disabled checks, and type-checking escape hatches. Verify whether their original reason still applies; remove obsolete ones only when the relevant checks confirm they are no longer needed. Preserve justified exceptions and report unverifiable ones rather than guessing.
 - Comments and docstrings contradicted by the local implementation, obsolete commented-out code, and misleading descriptions of parameters or results. Correct or remove demonstrably stale text without inventing intent. Preserve rationale, license notices, and tooling directives; do not remove an unresolved TODO merely because its age is unknown.
+- Local security vulnerabilities: trace untrusted inputs to sensitive operations and inspect injection-prone command/query construction, unsafe deserialization or evaluation, path traversal, weak cryptographic use, exposed secrets, and disabled validation where applicable. Establish the relevant source, sink, and missing safeguard before claiming a vulnerability; distinguish confirmed unsafe flow from a concern requiring caller/context evidence. Do not reproduce secret values in reports.
 
 This is a lens, not a requirement to find something in every category. Attach each finding to a precise location, evidence, and consequence. Label tool diagnostics with the rule/code when available. For manually identified smells, explain the concrete problem; do not present them as compiler warnings or inflate stylistic preferences into correctness errors. Check relevant language semantics before claiming unfamiliar syntax is improper.
 
@@ -74,6 +85,8 @@ Permitted local simplifications include simplifying expressions, removing redund
 
 When edits are requested, choose the smallest repair that addresses the cause. Preserve side effects when removing apparently unused code, and preserve error paths, evaluation order, and externally visible names. If the correct behavior is ambiguous, report the issue rather than guessing at a semantic change.
 
+For a confirmed logic or security defect, a repair may intentionally change faulty behavior: state the intended correction and verify valid inputs plus the failing or unsafe case with focused checks. This is not permission to redesign interfaces, authorization models, or dependencies. Prefer established local APIs and safeguards; if intent or a safe file-local repair is unclear, report the defect precisely and defer the change. Leave repository-wide dependency/security audits and system threat modeling outside this workflow.
+
 Do not make diagnostics disappear by weakening rules, adding blanket suppressions, unsafe escape hatches, fake reads, catch-and-ignore handlers, or cosmetic renames that merely evade detection. Respect documented intentional exceptions. If a genuine false positive requires a narrow suppression, explain the evidence and rationale rather than silently adding one. Leave unsafe or out-of-scope repairs as explicit remaining findings.
 
 After repairs, reread affected methods in full for missed issues and newly introduced redundancy, then rerun applicable checks. Use focused existing tests when behavior could be affected. Inspect the final diff for accidental changes outside the target. Do not create tests that merely restate formatting or syntax rules already checked by tooling.
@@ -84,10 +97,10 @@ Stop when every body has been inspected, the final pass reveals no remaining jus
 
 For each file, give:
 
-- Findings ordered by impact, with `path:line`, the diagnostic or concrete smell, why it matters, and a minimal repair. Classify each as **Correctness**, **Tool diagnostic**, or **Manual hygiene**. For a tool-reported correctness defect, use Correctness and include the tool/rule as evidence; do not duplicate it under two categories. Preserve the tool's actual severity separately, and do not inflate a hygiene improvement into a bug. Include actionable warnings and minor hygiene issues even when there are no correctness bugs.
+- Findings ordered by impact, with `path:line`, the diagnostic or concrete smell, why it matters, and a minimal repair. Classify each as **Security**, **Correctness**, **Tool diagnostic**, or **Manual hygiene**. Use Security for an evidenced vulnerability and Correctness for other established defects; attach tool/rule evidence when available rather than duplicating findings under Tool diagnostic. Mark unconfirmed security concerns explicitly. Preserve the tool's actual severity separately, and do not inflate a hygiene improvement into a bug. Include actionable warnings and minor hygiene issues even when there are no correctness bugs.
 - In cleanup mode, a concise account of fixes applied and any remaining or deferred findings.
 - A brief coverage statement identifying inspected methods/functions and file-level code, plus anything skipped or blocked. For long lists, use a count and unambiguous source ranges; keep detailed line-by-line tracking internal. Never imply complete coverage of code that was not inspected.
-- Verification performed and its result, including the diagnostic comparison (resolved, remaining, newly introduced) where applicable. Distinguish locally executed checks, supplied CI/log evidence, manual observations, and unavailable checks; identify configuration or revision limits.
+- Verification performed and its result, including the diagnostic comparison (resolved, remaining, newly introduced) where applicable. Cover syntax/types, lint/style, formatting, logic checks, and security analysis, stating gaps rather than implying every category was checked automatically. Distinguish locally executed checks, supplied CI/log evidence, manual observations, and unavailable checks; identify configuration or revision limits.
 
 When there are no findings, say so without inventing nits. Claim a file is warning-free only within the scope of checks that actually ran, and identify that scope.
 

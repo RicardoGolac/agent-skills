@@ -19,6 +19,18 @@ Read Cargo `compiler-message` records, preserving diagnostic codes/lint names, l
 
 `cargo check` skips final code generation and cannot prove a complete build succeeds; retain an existing build gate when applicable. Clippy adds local lint evidence but does not replace compiler checks or manual inspection. If Clippy is unavailable, run the available compiler check and explicitly leave lint coverage unverified. Compare the same commands and configuration after edits.
 
+## Linting, formatting, and security
+
+Prefer compiler lints, Clippy, and rustfmt from the installed toolchain. Alongside compiler/Clippy checks, run the containing crate's configured formatting check, typically:
+
+```text
+cargo fmt -- --check
+```
+
+Preserve package selection and formatting configuration; report target-file formatting findings separately from other files. In authorized cleanup, use a formatter invocation that writes only the selected file. Rustfmt may follow module declarations, so verify traversal before writing; if target-only scope cannot be guaranteed, apply the required local formatting manually. Avoid unscoped `cargo fmt` or `cargo clippy --fix` on a larger package/workspace.
+
+Use existing security analyzers when configured and manually inspect unsafe-block invariants, FFI boundaries, unchecked input-derived operations, command/query construction, and exposed sensitive data where applicable. Rust's ownership checks and a passing Clippy run do not prove absence of application-level vulnerabilities. Do not introduce unsafe code, unchecked conversions, or ignored errors to remove a diagnostic.
+
 ## Focus within each body
 
 - Inspect unused imports, bindings, assignments, unnecessary `mut`, redundant conversions, and needless borrowing. Keep names and intermediate values that clarify ownership or intent.
@@ -46,3 +58,4 @@ For worked cleanup and preservation decisions, see [unnecessary mutability](exam
 - [Clippy usage](https://doc.rust-lang.org/clippy/usage.html) for invoking the analyzer with Cargo.
 - [Cargo JSON messages](https://doc.rust-lang.org/cargo/reference/external-tools.html#json-messages) for diagnostic record structure.
 - [Rustup overrides](https://rust-lang.github.io/rustup/overrides.html) for project-selected toolchains.
+- [Rustfmt](https://github.com/rust-lang/rustfmt) for formatter configuration, check mode, and module traversal.

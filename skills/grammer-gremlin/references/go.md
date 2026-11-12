@@ -19,6 +19,18 @@ Capture build errors and vet findings with package, file, line/column, and messa
 
 Use the project's existing test commands when behavior could be affected, including relevant test-only or tagged files. Report the actual coverage; `go build` does not establish that test files compile or execute correctly. Rerun the same bounded build and vet commands after cleanup and compare diagnostics.
 
+## Linting, formatting, and security
+
+Use the standard ecosystem first: `go vet` for analysis and `gofmt` for formatting, alongside the containing-package build. For the selected file:
+
+```text
+gofmt -l path/to/file.go
+```
+
+`gofmt -l` lists files needing formatting; successful process exit alone does not mean the file is formatted. In authorized cleanup, use `gofmt -w path/to/file.go`, inspect the diff, and rerun formatting and vet checks. Supplement with existing configured tools such as Staticcheck or a project linter when installed; do not introduce another lint stack.
+
+Vet is not a complete security analyzer. Use the project's installed source-security checks when present and manually inspect command/query construction, unchecked paths, cryptographic misuse, and validation bypasses in the file. Distinguish actual unsafe input flow from intentional trusted inputs; dependency vulnerability scans do not replace this review.
+
 ## Focus within each body
 
 - Inspect ignored errors, overwritten errors, shadowed bindings, unused assignments, and misleading names. A discarded error needs an established reason; do not invent recovery behavior or change a public signature to make it disappear.
@@ -43,3 +55,4 @@ For a worked preservation decision, see [intentional deferred argument capture](
 - [Go specification](https://go.dev/ref/spec) for language semantics, including interfaces and loop variables.
 - [go vet](https://pkg.go.dev/cmd/vet) for the installed toolchain's applicable checks.
 - [Go command](https://pkg.go.dev/cmd/go) for package selection, build flags, module behavior, and environment settings.
+- [gofmt](https://pkg.go.dev/cmd/gofmt) for formatting checks and file-scoped writes.

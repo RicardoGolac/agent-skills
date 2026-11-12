@@ -2,6 +2,19 @@
 
 Use for JS/TS and JSX/TSX. Establish the runtime, language target, module mode, TypeScript options, and configured lint/format rules first. Apply the core method-by-method review; these prompts supplement it.
 
+## Linting, formatting, and security
+
+JavaScript/TypeScript have no single comprehensive built-in linter/formatter. Prefer the project's installed ESLint, Biome, or other configured checker; use its package script when it preserves file scope and does not fetch tools. For an existing ESLint/Prettier setup, check templates are:
+
+```text
+./node_modules/.bin/eslint path/to/file.ts
+./node_modules/.bin/prettier --check path/to/file.ts
+```
+
+Adapt extensions and executable locations to the project. For TypeScript, also run the installed type checker's existing project check; lint and type checking cover different issues. Do not use `npx` or another runner that can download a missing tool. In authorized cleanup, ESLint `--fix` or Prettier `--write` may target that same file; inspect the diff and rerun both checks. Use the project's alternative formatter when chosen, rather than running competing formatters.
+
+Run already-configured security rules/plugins where available, and manually trace input into `eval`, command execution, HTML insertion, URL/path construction, and unsafe object updates when present. An API name alone does not prove exploitability; establish actual untrusted flow and the relevant validation/encoding boundary. Do not substitute a dependency audit for inspecting this file.
+
 ## Focus within each body
 
 - Inspect unused bindings, dead assignments, shadowing, misleading local names, and redundant expressions. Remove an unused import only after checking whether loading its module has required side effects.
@@ -24,3 +37,5 @@ For a worked preservation decision, see [intentional falsy fallback](examples.md
 
 - [MDN: nullish coalescing](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing) for defaulting semantics.
 - [TypeScript: everyday types](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html) for `any`, assertions, and null handling. Check compatibility with the project's compiler version.
+- [ESLint CLI](https://eslint.org/docs/latest/use/command-line-interface) for file-scoped checks and autofixes.
+- [Prettier CLI](https://prettier.io/docs/cli) for check/write modes.

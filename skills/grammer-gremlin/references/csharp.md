@@ -18,6 +18,18 @@ Capture compiler diagnostics (often `CS...`) and enabled analyzer diagnostics (s
 
 If the file is compiled under several configurations/frameworks, use the relevant existing checks and state which were covered. A pass for one configuration does not establish cleanliness for all of them. Rerun the same build after edits and compare diagnostics using the core skill's evidence rules.
 
+## Linting, formatting, and security
+
+Prefer the SDK's Roslyn analyzers and `dotnet format`, respecting `.editorconfig` and existing analyzer packages. Alongside the build, check the selected file with:
+
+```text
+dotnet format path/to/App.csproj --no-restore --verify-no-changes --include path/to/File.cs
+```
+
+Resolve the included file path from the command's working directory as required by the installed tool. This check uses configured formatting/style/analyzer coverage; it is not a complete security check. In authorized cleanup, omit `--verify-no-changes` only after confirming the include scope, inspect the diff, then rerun the formatting check and build. Do not run an unscoped solution-wide fixer.
+
+Review enabled security analyzers and manually inspect untrusted input reaching SQL/command construction, deserialization, filesystem paths, or validation bypasses where present. Do not disable analyzers or add null-forgiving assertions to obtain a clean run. A security repair must use the actual API's supported safeguard and retain the intended valid-input behavior.
+
 ## Focus within each body
 
 - Inspect unused usings and locals, dead stores, shadowing, redundant casts, and misleading local names. Retain initializer side effects and externally required members or attributes.
@@ -42,3 +54,4 @@ For a worked preservation decision, see [intentional disposal boundary](examples
 - [Microsoft: using statement and declaration](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/statements/using) for disposal semantics and scope. Use documentation appropriate to the project's language version.
 - [dotnet build](https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-build) for build, restore, and incremental options.
 - [.NET code analysis](https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/overview) for compiler/analyzer distinctions and configured rule coverage.
+- [dotnet format](https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-format) for included-file scope and check/fix behavior.

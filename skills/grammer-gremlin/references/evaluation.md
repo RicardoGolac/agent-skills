@@ -24,6 +24,16 @@ Unavailable toolchains must be reported as skipped, never passed. Do not install
 
 Across cases, require inspection coverage for all bodies and file-level code, distinction between tool diagnostics and manual hygiene, concrete evidence for correctness claims, and honest verification limitations. Judge meaningful cleanup and behavioral invariants, not exact replacement text or heading matches. The Go cleanup case is the lint-passing/manual-cleanup case only when `go vet` actually runs successfully.
 
+## Lint and security scenarios
+
+When changing lint/security behavior, also evaluate these focused scenarios in temporary copies:
+
+- Introduce formatting drift in the Go cleanup case. Require a non-writing `gofmt -l` baseline, a target-file formatting repair in cleanup mode, and clean formatting plus vet rechecks. Other files must remain unchanged. Findings-only mode must not write formatting changes.
+- Use the raw SQLite function from [the security example](examples.md#repair-a-confirmed-injection-path-with-the-apis-safeguard), telling the evaluator only that the connection uses SQLite and the name comes from untrusted input. Withhold the corrected example and acceptance expectations. Require an evidenced Security finding and a file-local repair; independently verify normal matches, names containing quotes, and injection-shaped names using an in-memory database. Preserve the interface, avoid schema redesign, and do not claim automated security coverage when only manual inspection/runtime checks ran.
+- Supply a file containing a sensitive API call whose inputs are demonstrably constant/trusted. Require investigation of the actual flow rather than an invented vulnerability or a blanket rule against the API.
+
+For all scenarios, require reporting of available and unavailable syntax/type, lint/style, formatting, logic, and security checks. Missing optional linters must not trigger downloads, newly enabled rules, or replacement of the project's tools.
+
 ## Adding language coverage
 
 Pair each new language reference with at least one justified-cleanup case and one already-clean or intentional-construct case. Add behavioral assertions to the checker where practical. Include semantic traps suggested by real usage rather than collecting synthetic edge cases without a concrete purpose.

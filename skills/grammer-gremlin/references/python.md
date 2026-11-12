@@ -2,6 +2,19 @@
 
 Establish the supported Python versions and configured formatter, linter, and type checker from project configuration. Avoid introducing syntax unavailable in supported versions or adding type annotations as an unrelated campaign.
 
+## Linting, formatting, and security
+
+Python's syntax compiler is not a comprehensive linter. Prefer the project's installed Ruff, Pylint, Flake8, or chosen equivalent and configured formatter. For an existing Ruff setup, run in the project's prepared environment:
+
+```text
+ruff check path/to/file.py
+ruff format --check path/to/file.py
+```
+
+In authorized cleanup, `ruff check --fix path/to/file.py` and `ruff format path/to/file.py` can apply scoped fixes; keep unsafe fixes disabled, inspect the diff, and rerun both checks. If the project uses Black or another formatter, use that instead. Preserve configured rule selections and supported Python versions; do not install a checker or activate new rule sets just to find more issues.
+
+Use configured security analysis, such as enabled Ruff security rules or an installed Bandit setup, when available. Manually inspect untrusted input reaching shell commands, evaluated expressions, unsafe deserialization, path construction, and interpolated queries. Prefer argument separation or parameter binding appropriate to the actual API when repairing confirmed unsafe flow. Syntax compilation or a passing general-purpose linter does not prove these paths safe.
+
 ## Focus within each body
 
 - Inspect unused imports, dead assignments, shadowing of built-ins, misleading local names, redundant branches, and temporary values. Check import side effects and re-exports before removal.
@@ -26,3 +39,6 @@ For a worked preservation decision, see [intentional singleton test](examples.md
 
 - [Python tutorial: default arguments](https://docs.python.org/3/tutorial/controlflow.html#default-argument-values) for definition-time evaluation and shared defaults.
 - [Python reference: with statement](https://docs.python.org/3/reference/compound_stmts.html#the-with-statement) for context-manager behavior. Consult the documentation version matching the project.
+- [Ruff linter](https://docs.astral.sh/ruff/linter/) for scoped fixes, rule selection, and fix safety.
+- [Ruff formatter](https://docs.astral.sh/ruff/formatter/) for formatting checks and writes.
+- [Bandit](https://bandit.readthedocs.io/en/latest/) for Python security analysis when already part of the project.
