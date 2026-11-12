@@ -71,6 +71,28 @@ pub fn byte_count(text: &str) -> usize {
 
 **Why:** The value is never reassigned, and the temporary adds no explanation beyond the method name. Returning the length directly preserves the byte count and public signature. If the compiler reports `unused_mut`, record that diagnostic and confirm its removal after the edit. Do not add `allow(unused_mut)` or a dummy mutation to hide it.
 
+### Repair a confirmed injection path with the API's safeguard
+
+Before (Python, where `name` is untrusted input and `connection` is a SQLite connection):
+
+```python
+def find_user(connection, name):
+    return connection.execute(
+        f"SELECT id FROM users WHERE name = '{name}'"
+    ).fetchall()
+```
+
+After:
+
+```python
+def find_user(connection, name):
+    return connection.execute(
+        "SELECT id FROM users WHERE name = ?", (name,)
+    ).fetchall()
+```
+
+**Why:** Interpolation lets input alter the query structure. SQLite parameter binding treats `name` as data and also handles ordinary names containing quotes. This is a Security finding with a deliberate correction to unsafe behavior, not a cosmetic rewrite. Verify normal matches, quoted names, and an injection-shaped input against an isolated in-memory database. Do not copy SQLite's placeholder syntax into another database API without checking its binding contract, or assume a clean linter proves the flow safe. See [SQLite parameter binding](https://docs.python.org/3/library/sqlite3.html#how-to-use-placeholders-to-bind-values-in-sql-queries).
+
 ## Code to leave alone
 
 ### JavaScript and TypeScript: intentional falsy fallback
