@@ -5,7 +5,7 @@ Use when maintaining the skill, not during ordinary reviews. Fixtures are delibe
 ## Isolated procedure
 
 1. Copy `evaluations/` to a temporary directory. Keep the originals unchanged.
-2. Give an independent evaluator the skill path, the copied source files, and a realistic request: "Use $grammer-gremlin to scrub these files, one file at a time. Preserve behavior and public interfaces; verify what you can with installed tools." Provide only the applicable language reference, not this evaluation document, expected outcomes, or the verification script. Permit changes only to the copied source files and prohibit tool installation.
+2. Give an independent evaluator the skill path, the copied source files, and a realistic request: "Use $greg-grammer-gremlin to scrub these files, one file at a time. Preserve behavior and public interfaces; verify what you can with installed tools." Provide only the applicable language reference, not this evaluation document, expected outcomes, or the verification script. Permit changes only to the copied source files and prohibit tool installation.
 3. Inspect its report and actual diff against the acceptance criteria below. Run `python3 scripts/check_evaluations.py --fixtures /absolute/path/to/copied/evaluations` from the skill directory. The script checks runtime behavior using installed tools; it does not judge cleanup quality or replace a diff review.
 4. On fresh copies, request findings-only review. Verify the evaluator reports located, categorized findings and coverage while leaving all inputs unchanged. Also scrub the already-clean files alone and verify no cosmetic churn or invented findings.
 
@@ -33,6 +33,12 @@ When changing lint/security behavior, also evaluate these focused scenarios in t
 - Supply a file containing a sensitive API call whose inputs are demonstrably constant/trusted. Require investigation of the actual flow rather than an invented vulnerability or a blanket rule against the API.
 
 For all scenarios, require reporting of available and unavailable syntax/type, lint/style, formatting, logic, and security checks. Missing optional linters must not trigger downloads, newly enabled rules, or replacement of the project's tools.
+
+## Model suitability
+
+Compare candidate models and reasoning settings on the same isolated inputs, tool access, instructions, and context. Evaluate actual artifacts for cleanup completeness, unchanged intended behavior/interfaces, restraint on clean files, accurate diagnostic claims, and appropriate escalation of ambiguous or security-sensitive changes. Include files representative of real size and language semantics; the small fixtures alone do not establish suitability for every file.
+
+Record misses, false positives, unsafe edits, verification failures, escalations, completion time, and usage/cost when available. Include review and repair effort when judging savings. Select the lightest configuration that meets the acceptance criteria; keep exact model names and settings in the caller's configuration rather than prescribing them in the portable skill. No comparative model-performance claim is established merely by adding this guidance.
 
 ## Adding language coverage
 
