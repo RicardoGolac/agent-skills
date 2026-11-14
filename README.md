@@ -19,6 +19,7 @@ agent-skills/
 ## Conventions
 
 - Use lowercase, hyphenated names for agents and skills.
+- Give new skills and agents a unique, simple personal name plus a descriptive role, such as **Greg — Grammer Gremlin** (`greg-grammer-gremlin`). Include the short name in the discovery description and instructions so other agents can refer to it naturally. Keep a single canonical definition; a nickname is not a second package or a tool-level alias. Existing definitions retain their names until explicitly renamed.
 - Store agent definitions in `agents/<agent-name>.md`.
 - Store each skill package in `skills/<skill-name>/`. A package may contain `SKILL.md` directly or a deployable layout such as Memory Bank's nested `.github/`. Keep one canonical definition per skill.
 - Add `scripts/`, `references/`, and `assets/` within a skill only when needed.
@@ -32,6 +33,8 @@ For now, copy selected definitions into the locations expected by your AI tool. 
 `scripts/install.sh` is a placeholder. It does not install or link anything yet. Once target tools are chosen, it can support linking selected definitions without overwriting existing project instructions.
 
 See [Memory Bank](skills/memory-bank/README.md) for the available memory-bank skill, its templates, design intent, and feature retention policy.
+
+See [Greg — Grammer Gremlin](skills/greg-grammer-gremlin/SKILL.md) for file-by-file code hygiene review and cleanup. Refer to it naturally as **Greg**, or explicitly as `$greg-grammer-gremlin` when installed in a tool that supports skill invocation.
 
 ## Inspiration and sources
 
