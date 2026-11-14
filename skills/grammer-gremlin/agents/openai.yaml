@@ -1,4 +1,0 @@
-interface:
-  display_name: "Grammer Gremlin"
-  short_description: "Lint code for bugs, style, smells, and security issues"
-  default_prompt: "Use $grammer-gremlin to lint and review this file for syntax and logic errors, warnings, style and formatting issues, code smells, and local security vulnerabilities."

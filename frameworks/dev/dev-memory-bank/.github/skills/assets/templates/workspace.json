@@ -1,0 +1,13 @@
+{
+    "memoryBank": {
+        "version": 1,
+        "sharedBank": ".memory_bank",
+        "workspaceRepositoryId": "<workspace git handle or project name>"
+    },
+    "repositories": [
+        {
+            "id": "<git handle or project name>",
+            "path": "<project name>"
+        }
+    ]
+}

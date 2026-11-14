@@ -18,20 +18,26 @@ Some packages include a deployable layout instead. Memory Bank keeps its instruc
 
 | Skill | Purpose |
 | --- | --- |
-| [grammer-gremlin](grammer-gremlin/SKILL.md) | Lint one file at a time for syntax/logic errors, warnings, style/formatting issues, code smells, and local security vulnerabilities; apply focused cleanup when requested. Excludes architecture and system design. |
+| [Greg — Grammer Gremlin](greg-grammer-gremlin/SKILL.md) | **Greg** (`greg-grammer-gremlin`): lint one file at a time for syntax/logic errors, warnings, style/formatting issues, code smells, and local security vulnerabilities; apply focused cleanup when requested. Excludes architecture and system design. |
 | [memory-bank](memory-bank/README.md) | Create and maintain a root `.memory-bank/` with current codebase navigation, architecture, requirements, conventions, changes, and feature records with configurable retention. Package: `skills/memory-bank/`; deployable layout: its nested `.github/`. |
 
-## Grammer Gremlin
+## Greg — Grammer Gremlin
 
-Copy `grammer-gremlin/` into your AI tool's skill directory (for Codex, `~/.codex/skills/grammer-gremlin/`), checking for an existing destination before copying and preserving any local instructions. The package includes Codex UI metadata in `agents/openai.yaml`; its canonical instructions live in `SKILL.md`.
+Copy `greg-grammer-gremlin/` into your AI tool's skill directory (for Codex, `~/.codex/skills/greg-grammer-gremlin/`), checking for an existing destination before copying and preserving any local instructions. The package includes Codex UI metadata in `agents/openai.yaml`; its canonical instructions live in `SKILL.md`.
 
-Invoke with `$grammer-gremlin Review path/to/file` for findings only, or `$grammer-gremlin Scrub path/to/file` for focused fixes and verification. Multiple selected files are handled sequentially. Results include located findings, fixes when requested, remaining issues, and the scope and outcome of checks actually run.
+Invoke with `$greg-grammer-gremlin Review path/to/file` for findings only, or `$greg-grammer-gremlin Scrub path/to/file` for focused fixes and verification. Multiple selected files are handled sequentially. Results include located findings, fixes when requested, remaining issues, and the scope and outcome of checks actually run.
+
+Users and other agents can refer to this skill naturally as **Greg**, for example, “Have Greg review this file.” Its discovery description includes that name; delegating agents should include the canonical identifier or installed `SKILL.md` path. `$greg` is not a separate registered invocation. New skills should follow the same short-name-plus-role convention, with one canonical package per skill.
+
+Greg favors a lightweight, tool-capable coding model for routine cleanup, with exact model selection left to the caller. Provide the complete target file and minimal relevant instructions, configuration, diagnostics, and language guidance. Ambiguous behavior, security-sensitive repairs needing stronger reasoning, uncertain semantics, and repeatedly failing fixes are escalated to the caller; if escalation is unavailable, uncertain edits remain unapplied. Choose a model using representative behavioral evaluations rather than assuming narrow scope guarantees low complexity.
+
+Previously packaged as `grammer-gremlin`. For an existing installation, copy the renamed package to the new skill directory after checking for conflicts, update references to the new identifier, and preserve any local changes in the old package. Retire the old installation only after confirming it is no longer needed; do not silently overwrite or delete either destination.
 
 The Gremlin inspects every method and statement, performs a manual pass even when tooling passes, and actively applies justified local improvements in cleanup mode. It checks existing suppressions and comment accuracy, rereads affected methods, and verifies the result before finishing. Reports distinguish correctness defects, tool diagnostics, and manual hygiene findings and identify inspection coverage and limitations.
 
-Focused references for JavaScript/TypeScript, C#, Python, Go, and Rust are loaded only for matching files; other languages receive the same core review. References guide inspection and semantic preservation rather than imposing style rules or expanding into design changes. See [behavioral evaluation](grammer-gremlin/references/evaluation.md) for isolated cleanup and leave-alone cases and their standard-library verification script. Shell-specific guidance is not included.
+Focused references for JavaScript/TypeScript, C#, Python, Go, and Rust are loaded only for matching files; other languages receive the same core review. References guide inspection and semantic preservation rather than imposing style rules or expanding into design changes. See [behavioral evaluation](greg-grammer-gremlin/references/evaluation.md) for isolated cleanup and leave-alone cases and their standard-library verification script. Shell-specific guidance is not included.
 
-[Cleanup decision examples](grammer-gremlin/references/examples.md) explain four justified changes, including a local injection repair, and five constructs to preserve, with reasons. Universal patterns are shared; language-specific examples cover distinct semantic traps rather than repeating every cleanup in each language.
+[Cleanup decision examples](greg-grammer-gremlin/references/examples.md) explain four justified changes, including a local injection repair, and five constructs to preserve, with reasons. Universal patterns are shared; language-specific examples cover distinct semantic traps rather than repeating every cleanup in each language.
 
 The C#, Rust, and Go references include project-level compiler/analyzer command templates. The Gremlin captures a baseline, maps diagnostics to the selected file, and compares the same checks after cleanup while keeping edits local. Supplied CI logs can guide review when local tooling is unavailable, but fixes remain unverified until equivalent checks run on the changed revision. Missing toolchains or dependencies are reported rather than installed by this skill.
 

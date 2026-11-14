@@ -105,7 +105,7 @@ def main():
     args = parser.parse_args()
     root = args.fixtures.resolve()
     check_python(root)
-    with tempfile.TemporaryDirectory(prefix="grammer-gremlin-") as directory:
+    with tempfile.TemporaryDirectory(prefix="greg-grammer-gremlin-") as directory:
         work = Path(directory)
         check_go(root, work / "go")
         check_rust(root, work / "rust")
